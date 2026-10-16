@@ -266,6 +266,9 @@ html{scroll-padding-top:88px}
 @media (prefers-reduced-motion: reduce){.ld-hdr::before{transition:none}}
 /* ===== Responsive ===== */
 .ld-burger{display:none}
+.ld-stack-tail{flex-shrink:0}
+.ld-sec-b{position:relative;z-index:1}
+@media (max-width: 1080px){.ld-stack-tail{display:none}}
 .ld-mmenu a:hover{background:rgba(255,255,255,0.06)}
 @media (max-width: 1080px){
 .ld-nav{gap:28px !important}
@@ -701,7 +704,7 @@ html{scroll-padding-top:88px}
 </div>
 </div>
 </div>
-</div></div>
+</div><div class="ld-stack-tail" aria-hidden="true"></div></div>
 
 
 
@@ -1018,25 +1021,57 @@ class Component extends DCLogic {
   }
   applyStack() {
     if (!this.stack) return;
-    var cs = this.stack.children, vh = window.innerHeight || 900;
+    var cs = this.stack.querySelectorAll(':scope > .ld-fcard'), vh = window.innerHeight || 900;
+    var tail = this.stack.querySelector(':scope > .ld-stack-tail');
     if ((window.innerWidth || 1440) <= 1080) {
-      for (var j = 0; j < cs.length; j++) { cs[j].style.transform = ''; cs[j].style.filter = ''; cs[j].style.top = ''; cs[j].__ldTop = null; }
+      for (var j = 0; j < cs.length; j++) { cs[j].style.transform = ''; cs[j].style.filter = ''; cs[j].style.top = ''; cs[j].style.opacity = ''; cs[j].__ldTop = null; }
+      if (tail) tail.style.height = '';
+      if (this.ben) this.ben.style.marginTop = '';
+      this.stackPad = null;
       return;
     }
     var reduce = false;
     try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (err) {}
+    // last card stays pinned while the numbers section rises over it, then it is gone
+    var last = cs[cs.length - 1];
+    if (last && tail && this.ben) {
+      // the tail extends the sticky range by one card height; the numbers section is pulled up by the same
+      // amount (plus the stack's own bottom padding and the section padding) so the layout gap stays as before
+      var pad = Math.round(last.offsetHeight);
+      if (this.stackPad !== pad) {
+        this.stackPad = pad;
+        tail.style.height = pad + 'px';
+        var below = parseFloat(getComputedStyle(this.stack).paddingBottom) || 0;
+        var secPad = parseFloat(getComputedStyle(this.stack.parentElement).paddingBottom) || 0;
+        this.ben.style.marginTop = -Math.round(pad + below + secPad) + 'px';
+      }
+    }
+    // progress of the numbers section rising toward the last card: the whole stack flies away with it
+    var fade = 1;
+    if (last && this.ben && !reduce) {
+      var lastTop = Math.max(16, Math.round((vh - last.offsetHeight) / 2));
+      var lp = Math.max(0, Math.min(1, (vh - this.ben.getBoundingClientRect().top) / Math.max(1, vh - lastTop)));
+      fade = Math.max(0, 1 - lp / 0.5);
+    }
     for (var i = 0; i < cs.length; i++) {
       var c = cs[i];
       var top = Math.max(16, Math.round((vh - c.offsetHeight) / 2));
       if (c.__ldTop !== top) { c.style.top = top + 'px'; c.__ldTop = top; }
       if (reduce) continue;
-      var nx = cs[i + 1], p = 0;
-      if (nx) {
-        var nt = nx.getBoundingClientRect().top;
+      var isLast = i === cs.length - 1;
+      var p = 0;
+      if (isLast) {
+        p = 1 - fade;
+        c.style.transform = p > 0 ? 'translate3d(0,' + (-60 * p).toFixed(1) + 'px,0) scale(' + (1 - 0.1 * p).toFixed(4) + ')' : '';
+      } else {
+        var nt = cs[i + 1].getBoundingClientRect().top;
         p = Math.max(0, Math.min(1, (vh - nt) / Math.max(1, vh - top)));
+        c.style.transform = p > 0 ? 'scale(' + (1 - 0.06 * p).toFixed(4) + ')' : '';
       }
-      c.style.transform = p > 0 ? 'scale(' + (1 - 0.06 * p).toFixed(4) + ')' : '';
       c.style.filter = p > 0 ? 'brightness(' + (1 - 0.45 * p).toFixed(3) + ')' : '';
+      // cards underneath are fully covered by the last one: hide them so nothing shows through while it fades
+      c.style.opacity = isLast && fade < 1 ? fade.toFixed(3) : '';
+      c.style.visibility = (isLast ? fade <= 0 : fade < 1) ? 'hidden' : '';
     }
   }
   sats = [];
