@@ -87,6 +87,11 @@ a{color:#F5F5F5;text-decoration:none}a:hover{color:#FFFFFF}
 .ld-cta:hover .ld-arr,.ld-cta:focus-visible .ld-arr{transform:translateX(2px)}
 .ld-cta:hover .ld-txt,.ld-cta:focus-visible .ld-txt{color:var(--ld-on)}
 @media (prefers-reduced-motion: reduce){.ld-cta .ld-dot,.ld-cta .ld-arr{transition:none}}
+/* ===== Sticky header ===== */
+html{scroll-padding-top:88px}
+.ld-hdr::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;background:rgba(10,10,10,0.66);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid rgba(255,255,255,0.07);opacity:0;transition:opacity .35s ease}
+.ld-hdr.ld-hdr-on::before{opacity:1}
+@media (prefers-reduced-motion: reduce){.ld-hdr::before{transition:none}}
 /* ===== Responsive ===== */
 .ld-burger{display:none}
 .ld-mmenu a:hover{background:rgba(255,255,255,0.06)}
@@ -103,8 +108,17 @@ a{color:#F5F5F5;text-decoration:none}a:hover{color:#FFFFFF}
 .ld-nav,.ld-hide-m{display:none !important}
 .ld-burger{display:flex !important}
 .ld-mmenu{display:flex !important}
-.ld-hero{padding:48px 20px 0 !important}
-.ld-zoom{display:none !important}
+.ld-hero{display:flex;flex-direction:column;gap:24px;box-sizing:border-box;height:calc(100vh - 72px);height:calc(100svh - 72px);min-height:480px;padding:24px 20px !important}
+.ld-hero-in{display:contents !important}
+.ld-hero-txt{order:1;position:relative;z-index:2}
+.ld-hero-ctas{order:3;position:relative;z-index:2;gap:12px !important}
+.ld-zoom{order:2;flex:1 1 0;min-height:120px;height:auto !important;margin:0 !important;pointer-events:none}
+.ld-zoom-st{position:absolute !important;inset:0;height:auto !important;display:block !important}
+.ld-dwrap{position:absolute !important;left:0;top:0;width:auto !important;max-width:none !important;padding:0 !important}
+.ld-dash{transform-origin:0 0 !important;will-change:auto !important}
+.ld-dinner{width:900px !important}
+.ld-sat,.ld-dchat{display:none !important}
+.ld-zoom,.ld-zoom *{animation:none !important;transition:none !important}
 .ld-logos{padding-top:72px !important;padding-left:20px !important;padding-right:20px !important}
 .ld-sec{padding-top:96px !important;padding-left:20px !important;padding-right:20px !important}
 .ld-gap{gap:48px !important}
@@ -131,12 +145,14 @@ a{color:#F5F5F5;text-decoration:none}a:hover{color:#FFFFFF}
 @media (max-width: 480px){
 .ld-hdr{padding:16px !important}
 .ld-hdr-cta{font-size:13px !important;padding:9px 14px !important}
-.ld-hero{padding:40px 16px 0 !important}
+.ld-hero{padding:20px 16px 24px !important;gap:20px}
 .ld-h1{font-size:40px !important;line-height:1.05 !important}
 .ld-hero-p{font-size:16px !important}
 .ld-hero-ctas{width:100%}
 .ld-btns{flex-direction:column;align-items:stretch;width:100%}
 .ld-btns > a{text-align:center}
+.ld-hero .ld-btns{flex-direction:row;flex-wrap:nowrap !important}
+.ld-hero .ld-btns > a{flex:1 1 0;min-width:0;padding:14px 10px !important;font-size:14px !important;white-space:nowrap}
 .ld-fine{font-size:12px !important;line-height:1.5;max-width:280px}
 .ld-logos{padding-top:64px !important;padding-left:16px !important;padding-right:16px !important}
 .ld-sec{padding-top:80px !important;padding-left:16px !important;padding-right:16px !important}
@@ -160,6 +176,11 @@ a{color:#F5F5F5;text-decoration:none}a:hover{color:#FFFFFF}
 .ld-ftop{padding:48px 16px 0 !important}
 .ld-wordmark{font-size:27vw !important}
 }
+@media (max-width: 768px) and (max-height: 700px){
+.ld-fine{display:none !important}
+.ld-h1{font-size:36px !important}
+.ld-hero-p{font-size:15px !important}
+}
 @media (max-width: 1080px){
 .ld-mr{opacity:0;transform:translateY(28px);filter:blur(6px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1),filter .9s cubic-bezier(.2,.7,.2,1)}
 .ld-mr.ld-mr-d1{transition-delay:.12s}
@@ -171,7 +192,7 @@ a{color:#F5F5F5;text-decoration:none}a:hover{color:#FFFFFF}
 <div style="width: 100%; min-height: 100vh; background: #0A0A0A; color: #F5F5F5; font-family: 'Manrope', 'Helvetica Neue', sans-serif; overflow-x: clip; --ld-glow: {{accentSoft}}">
 
 <!-- NAV -->
-<header class="ld-hdr" style="position: relative; z-index: 20; max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 24px">
+<header class="ld-hdr {{hdrCls}}" style="position: sticky; top: 0; z-index: 50;max-width: 1200px; margin: 0 auto; padding: 20px 24px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 24px">
 <a href="#top" style="display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 600; letter-spacing: -0.04em; justify-self: start">
 <svg width="22" height="22" viewBox="0 0 621 623" fill="{{accent}}" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M0.431984 0.33192C42.5785 -0.325307 86.3002 0.200101 128.562 0.178617L128.597 494.901L620.265 494.999C620.275 508.368 621.583 616.933 619.552 622.255L617.267 622.704L0.390976 622.538C-0.393204 598.319 0.243473 570.653 0.250309 546.132L0.28941 400.556L0.431984 0.33192Z"></path><path d="M189.333 0.291027L620.05 0.243164C620.753 13.8594 620.275 31.504 620.275 45.3692L620.157 128.553C589.376 129.868 550.089 128.647 518.575 128.651L317.482 128.748L317.433 256.782C358.683 257.462 401.71 256.945 443.087 256.964L620.353 256.867L620.128 384.833L189.404 384.853L189.333 0.291027Z"></path></svg>ledra</a>
 <nav aria-label="Main" class="ld-nav" style="display: flex; gap: 48px; font-size: 14px; flex-wrap: wrap; justify-content: center; align-items: center; justify-self: center">
@@ -202,8 +223,8 @@ a{color:#F5F5F5;text-decoration:none}a:hover{color:#FFFFFF}
 <svg class="ld-glow" width="100%" height="100%" style="display: block"><defs><pattern id="ld-dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="rgba(255,255,255,0.32)"></circle></pattern></defs><rect width="100%" height="100%" fill="url(#ld-dots)"></rect></svg>
 </div>
 
-<div style="position: relative; z-index: 2; max-width: 880px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 58px">
-<div data-dc-group="" style="box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; justify-content: normal; align-items: center"><h1 class="ld-r2 ld-h1" style="margin: 0; font-family: 'Manrope', sans-serif; font-size: clamp(52px, 7.6vw, 104px); line-height: 1.02; font-weight: 500; letter-spacing: -0.05em; color: #FAFAFA; text-align: center">Reports that<br>write themselves.</h1><p class="ld-r3 ld-hero-p" style="margin: 0; max-width: 560px; font-size: 18px; line-height: 1.5; color: #A3A3A3">Ledra is the AI agent that connects to your company data, reads source, and delivers board-ready reports in minutes not weeks.</p></div>
+<div class="ld-hero-in" style="position: relative; z-index: 2; max-width: 880px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 58px">
+<div data-dc-group="" class="ld-hero-txt" style="box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; justify-content: normal; align-items: center"><h1 class="ld-r2 ld-h1" style="margin: 0; font-family: 'Manrope', sans-serif; font-size: clamp(52px, 7.6vw, 104px); line-height: 1.02; font-weight: 500; letter-spacing: -0.05em; color: #FAFAFA; text-align: center">Reports that<br>write themselves.</h1><p class="ld-r3 ld-hero-p" style="margin: 0; max-width: 560px; font-size: 18px; line-height: 1.5; color: #A3A3A3">Ledra is the AI agent that connects to your company data, reads source, and delivers board-ready reports in minutes not weeks.</p></div>
 
 <div class="ld-r4 ld-hero-ctas" style="display: flex; flex-direction: column; align-items: center; gap: 16px">
 <div class="ld-btns" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center">
@@ -216,18 +237,18 @@ a{color:#F5F5F5;text-decoration:none}a:hover{color:#FFFFFF}
 
 <!-- DASHBOARD SHOT -->
 <div ref="{{zoomRef}}" class="ld-zoom" style="position: relative; z-index: 3; margin: 90px -24px 0; height: calc(min(100vh, 960px) * 2.3); margin-top: -60px">
-<div style="position: sticky; top: 0; height: min(100vh, 960px); display: flex; align-items: center; justify-content: center">
+<div class="ld-zoom-st" style="position: sticky; top: 0; height: min(100vh, 960px); display: flex; align-items: center; justify-content: center">
 
-<div class="ld-r5" style="position: relative; z-index: 3; width: 100%; max-width: 1248px; padding: 0 24px; box-sizing: border-box; padding-top: 40px">
-<div ref="{{dashRef}}" style="position: relative; transform-origin: 50% 50%; will-change: transform; transform: scale(0.9)">
+<div class="ld-r5 ld-dwrap" style="position: relative; z-index: 3; width: 100%; max-width: 1248px; padding: 0 24px; box-sizing: border-box; padding-top: 40px">
+<div ref="{{dashRef}}" class="ld-dash" style="position: relative; transform-origin: 50% 50%; will-change: transform; transform: scale(0.9)">
 
-<div ref="{{sat1Ref}}" aria-hidden="true" style="position: absolute; z-index: 5; right: -90px; top: -110px; will-change: transform, opacity">
+<div ref="{{sat1Ref}}" class="ld-sat" aria-hidden="true" style="position: absolute; z-index: 5; right: -90px; top: -110px; will-change: transform, opacity">
 <div class="ld-pop1" style="width: 150px; padding: 16px; border-radius: 16px; background: #151515; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 24px 60px rgba(0,0,0,0.55); display: flex; flex-direction: column; gap: 6px; font-size: 13px; text-align: center">
 <span style="color: #8C8C8C">Revenue, QoQ</span>
 <span style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 600; letter-spacing: -0.04em">+12.4%</span>
 </div>
 </div>
-<div ref="{{sat2Ref}}" aria-hidden="true" style="position: absolute; z-index: 5; left: -130px; bottom: 100px; will-change: transform, opacity">
+<div ref="{{sat2Ref}}" class="ld-sat" aria-hidden="true" style="position: absolute; z-index: 5; left: -130px; bottom: 100px; will-change: transform, opacity">
 <div class="ld-pop2" style="width: 250px; padding: 14px 16px; border-radius: 16px; background: #151515; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 24px 60px rgba(0,0,0,0.55); display: flex; align-items: center; gap: 12px; font-size: 13px">
 <span style="width: 32px; height: 32px; border-radius: 10px; background: #2A1A12; color: #FF8A5B; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700">!</span>
 <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">Anomaly flagged</span><span style="color: #8C8C8C">Logistics spend +9% vs plan</span></span>
@@ -236,7 +257,7 @@ a{color:#F5F5F5;text-decoration:none}a:hover{color:#FFFFFF}
 
 <div style="border-radius: 22px; padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 40px 120px rgba(0,0,0,0.6), 0 0 80px rgba(255,255,255,0.04)">
 <div style="border-radius: 16px; background: #0F0F0F; border: 1px solid rgba(255,255,255,0.07); overflow: hidden">
-<div style="width: 1184px; display: flex; font-size: 13px">
+<div class="ld-dinner" style="width: 1184px; display: flex; font-size: 13px">
 
 <aside style="width: 188px; flex-shrink: 0; padding: 18px 14px; border-right: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; gap: 4px; min-height: 660px">
 <div style="display: flex; align-items: center; gap: 8px; padding: 4px 8px 18px; font-weight: 600; font-size: 16px; letter-spacing: -0.03em"><svg width="16" height="16" viewBox="0 0 621 623" fill="{{accent}}" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M0.431984 0.33192C42.5785 -0.325307 86.3002 0.200101 128.562 0.178617L128.597 494.901L620.265 494.999C620.275 508.368 621.583 616.933 619.552 622.255L617.267 622.704L0.390976 622.538C-0.393204 598.319 0.243473 570.653 0.250309 546.132L0.28941 400.556L0.431984 0.33192Z"></path><path d="M189.333 0.291027L620.05 0.243164C620.753 13.8594 620.275 31.504 620.275 45.3692L620.157 128.553C589.376 129.868 550.089 128.647 518.575 128.651L317.482 128.748L317.433 256.782C358.683 257.462 401.71 256.945 443.087 256.964L620.353 256.867L620.128 384.833L189.404 384.853L189.333 0.291027Z"></path></svg>ledra</div>
@@ -317,7 +338,7 @@ a{color:#F5F5F5;text-decoration:none}a:hover{color:#FFFFFF}
 </div>
 </main>
 
-<aside aria-label="Ledra chat" style="width: 300px; flex-shrink: 0; border-left: 1px solid rgba(255,255,255,0.07); background: #0C0C0C; display: flex; flex-direction: column; min-height: 0">
+<aside aria-label="Ledra chat" class="ld-dchat" style="width: 300px; flex-shrink: 0; border-left: 1px solid rgba(255,255,255,0.07); background: #0C0C0C; display: flex; flex-direction: column; min-height: 0">
 <div style="padding: 16px 18px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 10px">
 <span style="width: 30px; height: 30px; border-radius: 9px; background: #1F1F1F; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 621 623" fill="#FFFFFF" aria-hidden="true"><path d="M0.431984 0.33192C42.5785 -0.325307 86.3002 0.200101 128.562 0.178617L128.597 494.901L620.265 494.999C620.275 508.368 621.583 616.933 619.552 622.255L617.267 622.704L0.390976 622.538C-0.393204 598.319 0.243473 570.653 0.250309 546.132L0.28941 400.556L0.431984 0.33192Z"></path><path d="M189.333 0.291027L620.05 0.243164C620.753 13.8594 620.275 31.504 620.275 45.3692L620.157 128.553C589.376 129.868 550.089 128.647 518.575 128.651L317.482 128.748L317.433 256.782C358.683 257.462 401.71 256.945 443.087 256.964L620.353 256.867L620.128 384.833L189.404 384.853L189.333 0.291027Z"></path></svg></span>
 <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 14px">Ask Ledra</span><span style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8C8C8C"><span style="width: 6px; height: 6px; border-radius: 50%; background: {{accent}}; display: inline-block"></span>Agent online</span></div>
@@ -911,6 +932,15 @@ class Component extends DCLogic {
     });
     if (moving) this.socRaf = requestAnimationFrame(this.socTick);
   };
+  fitDash() {
+    var z = this.zoom, d = this.dash;
+    if (!z || !d) return;
+    var zw = z.clientWidth, zh = z.clientHeight, w = d.offsetWidth, h = d.offsetHeight;
+    if (!zw || !zh || !w || !h) return;
+    var s = Math.min(zw / w, zh / h);
+    var x = Math.round((zw - w * s) / 2), top = Math.round((zh - h * s) / 2);
+    d.style.transform = 'translate3d(' + x + 'px,' + top + 'px,0) scale(' + s.toFixed(4) + ')';
+  }
   schedule() {
     if (this.raf) return;
     this.raf = requestAnimationFrame(() => { this.raf = 0; this.apply(); });
@@ -925,10 +955,14 @@ class Component extends DCLogic {
       if (total > 0) p = Math.max(0, Math.min(1, -r.top / total));
     }
     var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    var mob = (window.innerWidth || 1440) <= 768;
+    var hdrOn = y > 8;
+    if (hdrOn !== !!this.state.hdrOn) this.setState({ hdrOn: hdrOn });
     if (this.dash) {
-      this.dash.style.transform = 'translate3d(0,' + (-e * 40) + 'px,0) scale(' + (0.9 + 0.42 * e) + ')';
+      if (mob) this.fitDash();
+      else this.dash.style.transform = 'translate3d(0,' + (-e * 40) + 'px,0) scale(' + (0.9 + 0.42 * e) + ')';
     }
-    for (var i = 0; i < this.sats.length; i++) {
+    for (var i = 0; i < this.sats.length && !mob; i++) {
       var s = this.sats[i];
       if (!s) continue;
       var v = this.satVec[i];
@@ -999,6 +1033,7 @@ class Component extends DCLogic {
       dashRef: this.setDash,
       zoomRef: this.setZoom,
       menuOpen: !!this.state.menuOpen,
+      hdrCls: this.state.hdrOn ? 'ld-hdr-on' : '',
       menuExpanded: this.state.menuOpen ? 'true' : 'false',
       burgerPath: this.state.menuOpen ? 'M4 4l10 10M14 4L4 14' : 'M3 6h12M3 12h12',
       toggleMenu: function () { self.setState({ menuOpen: !self.state.menuOpen }); },
