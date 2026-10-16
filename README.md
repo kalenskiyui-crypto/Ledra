@@ -1,29 +1,22 @@
-# Ledra — Landing page — design reference
+# Ledra — landing page
 
-This is a design mockup created in a visual design tool, exported as a
-standalone page. Treat it as a REFERENCE MOCKUP, not production code:
-the markup and inline styles carry the design's precise values — colors,
-font sizes, spacing, radii, shadows, layout — which an implementation
-should replicate faithfully in its own components and styling system
-rather than copy wholesale.
+Static one-page site deployed on Vercel from `main`.
 
-## Contents
+## Files
 
-- `Main.dc.html` — the artboard (a Design Component: an `<x-dc>`
-  template + a small logic class). The values to replicate live in its
-  inline `style="…"` attributes and the `<helmet><style>` block.
-- `assets/` — files uploaded to the design (images, fonts, media)
-- `support.js`, `vendor/react*.js` — the runtime that renders the
-  component in a browser; not part of the design.
+- `index.html` — the page (built from the design canvas, see below)
+- `support.js`, `vendor/` — runtime that renders the page in the browser
+- `assets/` — logos, founder video and poster (hashed names, cached for a year)
+- `robots.txt`, `sitemap.xml`, `404.html`, `site.webmanifest`, `og-image.png`, favicons
+- `vercel.json` — clean URLs, redirects, security and cache headers
 
-## Uploaded files
+## Updating from the design canvas
 
-Images, fonts and media uploaded to the design are written once each under
-`assets/` — 12 in this export — and the exported files refer to them there. A
-reference a script puts together while the page runs (for example
-`"/_blob/" + id`) is not rewritten and does not load from this folder.
+1. Export / copy the canvas source `Main.dc.html`.
+2. `python3 scripts/build.py path/to/Main.dc.html` — writes `index.html` with asset paths,
+   the React runtime and the full SEO `<head>` (title, description, canonical, Open Graph,
+   Twitter, JSON-LD).
+3. Commit and push to `main`.
 
-## Viewing
-
-Serve the folder (e.g. `python3 -m http.server`) and open `Main.dc.html`;
-some browsers block the scripts over file://.
+The production domain lives in `SITE` at the top of `scripts/build.py`; if it changes, update it
+there and in `robots.txt` and `sitemap.xml`.

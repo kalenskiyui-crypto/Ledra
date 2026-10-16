@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ledra-landing-page-html-3.vercel.app/sitemap.xml
